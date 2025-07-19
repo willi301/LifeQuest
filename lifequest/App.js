@@ -1,12 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+
+import MainQuest from './mainQuest';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    
+    <ScrollView>
+      <View style={styles.container}>
+        <MainQuest />
+      </View>
+
+    </ScrollView>
+
+
   );
 }
 
