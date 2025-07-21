@@ -1,34 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-import * as React from 'react';
+import React, { useState } from 'react';
 
 export default function MainQuest() {
 
 
   const [checked, setChecked] = React.useState(false);
 
-  const DATA = [
-    { id: '1', title: 'First work' },
-    { id: '2', title: 'Second work' },
-    { id: '3', title: 'Third work' },
-  ];
+  const [data, setData] = useState([
+    { id: '1', title: 'First work', status: '0' },
+    { id: '2', title: 'Second work', status: '0' },
+    { id: '3', title: 'Third work', status: '0' },
+  ]);
 
-  const Item = ({ title }) => (
+  const toggleStatus = (id) => {
+    const newData = data.map(item =>
+      item.id === id
+        ? { ...item, status: item.status === '0' ? '1' : '0' }
+        : item
+    );
+    setData(newData);
+  };
 
+  const Item = ({ item }) => (
     <View style={styles.item}>
       <Checkbox
-              status={checked ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setChecked(!checked);
-              }}
-              style={styles.box}
-            />
-      <Text style={styles.titleText}>{title}</Text>
-
+        status={item.status === '1' ? 'checked' : 'unchecked'}
+        onPress={() => toggleStatus(item.id)}
+        style={styles.box}
+      />
+      <Text style={styles.titleText}>{item.title}</Text>
     </View>
-    
-
   );
 
 
@@ -40,9 +43,9 @@ export default function MainQuest() {
         </View>
 
         <FlatList 
-          data={DATA}
+          data={data}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <Item title={item.title} />}
+          renderItem={({ item }) => <Item item={item} />}
         />
 
             
