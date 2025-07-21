@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, View, Modal, TouchableOpacity, } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import React, { useState } from 'react';
 
 export default function MainQuest() {
 
 
-  const [checked, setChecked] = React.useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [data, setData] = useState([
     { id: '1', title: 'First work', status: '0' },
@@ -25,12 +26,13 @@ export default function MainQuest() {
 
   const Item = ({ item }) => (
     <View style={styles.item}>
-      <Checkbox
-        status={item.status === '1' ? 'checked' : 'unchecked'}
-        onPress={() => toggleStatus(item.id)}
-        style={styles.box}
-      />
-      <Text style={styles.titleText}>{item.title}</Text>
+      <View style={styles.checkboxWrapper}>
+        <Checkbox
+          status={item.status === '1' ? 'checked' : 'unchecked'}
+          onPress={() => toggleStatus(item.id)}
+        />
+      </View>
+      <Text style={styles.itemText}>{item.title}</Text>
     </View>
   );
 
@@ -38,14 +40,43 @@ export default function MainQuest() {
 
   return (
     <View style={styles.container}>
+
+
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          animationType="slide"
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>This is your popup!</Text>
+
+              {/* Close Button */}
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text style={styles.closeText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         <View style={styles.title}>
             <Text style={styles.titleText}>Main quest:</Text>
+            <TouchableOpacity
+              style={styles.plusButton}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.plusText}>＋</Text>
+            </TouchableOpacity>
         </View>
 
         <FlatList 
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Item item={item} />}
+          style={{ width: '100%' }}
+          padding={0}
+          
         />
 
             
@@ -59,31 +90,76 @@ export default function MainQuest() {
 const styles = StyleSheet.create({
   container: {
     marginTop: 50,
-    backgroundColor: 'pink',
-    width: '80%',
+    width: '95%',
   },
 
   title: {
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
     fontWeight: 'bold',
-    backgroundColor: 'lightblue',
-    height: 30,
+    height: 40,
     paddingLeft: 10,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: '#f0f0f0',
+    alignItems: 'center',
   },
 
   titleText: {
-    fontSize: 20,
-  },
-
-  box: {
-    backgroundColor: 'black',
+    fontSize: 30,
   },
 
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
+  },
+
+  itemText: {
+    fontSize: 20,
+  },
+  plusButton: {
+    backgroundColor: '#007bff',
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  plusText: {
+    fontSize: 24,
+    color: 'black',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center'
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20
+  },
+  closeText: {
+    fontSize: 16,
+    color: 'blue'
+  },
+  checkboxWrapper: {
+    borderWidth: 2,
+    borderColor: 'black', // or any color
+    borderRadius: 4,
+    padding: 2, // spacing between border and checkbox
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
+    width: 40,
+    marginRight: 5,
+    transform: [{ scale: 0.7 }], // adjust this (e.g., 0.7, 0.6)
   }
 });
