@@ -7,15 +7,14 @@ import SideQuest from './sideQuest';
 export default function App() {
   return (
     
-    <ScrollView>
-      <View style={{ flex: 1 }}>
-        <MainQuest />
+      <View style={styles.container}>
+        <View style={{ flex: 1 , width: '95%'}}>
+          <MainQuest />
+        </View>
+        <View style={{ flex: 1 , width: '95%'}}>
+          <SideQuest />
+        </View>
       </View>
-      <View style={{ flex: 1 }}>
-        <SideQuest />
-      </View>
-
-    </ScrollView>
 
 
   );
@@ -27,5 +26,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
 });
