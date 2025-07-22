@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, ScrollView, StyleSheet, Text, View, Modal, TouchableOpacity, } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, View, Modal, TouchableOpacity, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import React, { useState } from 'react';
 
@@ -8,6 +8,7 @@ export default function MainQuest() {
 
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [task, setTask] = useState('');
 
   const [data, setData] = useState([
     { id: '1', title: 'First work', status: '0' },
@@ -50,7 +51,25 @@ export default function MainQuest() {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalText}>This is your popup!</Text>
+              <Text style={styles.modalText}>Enter a main quest</Text>
+              <TextInput
+                placeholder={'Enter a task...'}
+                placeholderTextColor="#aaa"
+                value={task}
+                onChangeText={setTask}
+              />
+
+              <TouchableOpacity style={{marginTop: 5, marginBottom: 5}}
+                onPress={() => {
+                  if (task.trim()) {
+                    setData([...data, { id: (data.length + 1).toString(), title: task, status: '0' }]);
+                    setTask('');
+                    setModalVisible(false);
+                  }
+                }}
+              >
+                <Text style={styles.closeText}>Add</Text>
+              </TouchableOpacity>
 
               {/* Close Button */}
               <TouchableOpacity onPress={() => setModalVisible(false)}>
@@ -78,9 +97,6 @@ export default function MainQuest() {
           padding={0}
           
         />
-
-            
-        
     </View>
 
 
