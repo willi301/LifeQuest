@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { FlatList, ScrollView, StyleSheet, Text, View, Modal, TouchableOpacity, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import React, { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons'; // or any icon library you use
 
 export default function SideQuest() {
 
@@ -25,6 +26,11 @@ export default function SideQuest() {
     setData(newData);
   };
 
+  const removeTask = (id) => {
+    const filteredData = data.filter(item => item.id !== id);
+    setData(filteredData);
+  };
+
   const Item = ({ item }) => (
     <View style={styles.item}>
       <View style={styles.checkboxWrapper}>
@@ -34,6 +40,9 @@ export default function SideQuest() {
         />
       </View>
       <Text style={styles.itemText}>{item.title}</Text>
+      <TouchableOpacity onPress={() => removeTask(item.id)} style={styles.deleteButton}>
+        <Ionicons name="trash" size={20} color="red" />
+      </TouchableOpacity>
     </View>
   );
 
@@ -42,7 +51,7 @@ export default function SideQuest() {
   return (
     <View style={styles.container}>
 
-
+        {/* pop up box to add quests */}
         <Modal
           transparent={true}
           visible={modalVisible}
@@ -51,7 +60,7 @@ export default function SideQuest() {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalText}>Enter a main quest</Text>
+              <Text style={styles.modalText}>Enter a side quest</Text>
               <TextInput
                 placeholder={'Enter a task...'}
                 placeholderTextColor="#aaa"
@@ -59,7 +68,7 @@ export default function SideQuest() {
                 onChangeText={setTask}
               />
 
-              <TouchableOpacity style={{marginTop: 5, marginBottom: 5}}
+              <TouchableOpacity style={{marginTop: 15, marginBottom: 5}}
                 onPress={() => {
                   if (task.trim()) {
                     setData([...data, { id: (data.length + 1).toString(), title: task, status: '0' }]);
@@ -79,8 +88,9 @@ export default function SideQuest() {
           </View>
         </Modal>
 
+        {/* main title bar */}
         <View style={styles.title}>
-            <Text style={styles.titleText}>Main quest:</Text>
+            <Text style={styles.titleText}>Side quest:</Text>
             <TouchableOpacity
               style={styles.plusButton}
               onPress={() => setModalVisible(true)}
@@ -89,6 +99,8 @@ export default function SideQuest() {
             </TouchableOpacity>
         </View>
 
+
+        {/* List of side quests */}
         <FlatList 
           data={data}
           keyExtractor={(item) => item.id}
@@ -177,5 +189,9 @@ const styles = StyleSheet.create({
     width: 40,
     marginRight: 5,
     transform: [{ scale: 0.7 }], // adjust this (e.g., 0.7, 0.6)
-  }
+  },
+  deleteButton: {
+    marginLeft: 'auto',
+    paddingHorizontal: 8,
+  },
 });
