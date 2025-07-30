@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { FlatList, ScrollView, StyleSheet, Text, View, Modal, TouchableOpacity, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons'; // or any icon library you use
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SideQuest() {
 
@@ -11,11 +12,37 @@ export default function SideQuest() {
   const [modalVisible, setModalVisible] = useState(false);
   const [task, setTask] = useState('');
 
-  const [data, setData] = useState([
-    { id: '1', title: 'First work', status: '0' },
-    { id: '2', title: 'Second work', status: '0' },
-    { id: '3', title: 'Third work', status: '0' },
-  ]);
+  // const [data, setData] = useState([
+  //   { id: '1', title: 'First work', status: '0' },
+  //   { id: '2', title: 'Second work', status: '0' },
+  //   { id: '3', title: 'Third work', status: '0' },
+  // ]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('@side_data');
+        if (jsonValue != null) {
+          setData(JSON.parse(jsonValue));
+        }
+      } catch (e) {
+        console.error('Error loading data', e);
+      }
+    };
+    loadData();
+  }, []);
+
+  const [data, setData] = useState([]);
+
+
+  const saveData = async (tasks) => {
+  try {
+      const jsonValue = JSON.stringify(tasks);
+      await AsyncStorage.setItem('@side_data', jsonValue);
+    } catch (e) {
+      console.error('Error saving data', e);
+    }
+  };
 
   const toggleStatus = (id) => {
     const newData = data.map(item =>
@@ -24,11 +51,13 @@ export default function SideQuest() {
         : item
     );
     setData(newData);
+    saveData(newData);
   };
 
   const removeTask = (id) => {
     const filteredData = data.filter(item => item.id !== id);
     setData(filteredData);
+    saveData(filteredData);
   };
 
   const Item = ({ item }) => (
@@ -70,11 +99,18 @@ export default function SideQuest() {
 
               <TouchableOpacity style={{marginTop: 15, marginBottom: 5}}
                 onPress={() => {
-                  if (task.trim()) {
-                    setData([...data, { id: (data.length + 1).toString(), title: task, status: '0' }]);
-                    setTask('');
-                    setModalVisible(false);
-                  }
+                    if (task.trim()) {
+                      const newTask = {
+                        id: Date.now().toString(), // ✅ Unique ID
+                        title: task,
+                        status: '0',
+                      };
+                      const updatedData = [...data, newTask];
+                      setData(updatedData);
+                      saveData(updatedData); // ✅ Save to AsyncStorage
+                      setTask('');
+                      setModalVisible(false);
+                    }
                 }}
               >
                 <Text style={styles.closeText}>Add</Text>
