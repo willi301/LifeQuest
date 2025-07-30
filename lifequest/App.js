@@ -3,11 +3,13 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import MainQuest from './mainQuest';
 import SideQuest from './sideQuest';
+import Header from './Header';
 
 export default function App() {
   return (
-    
+
       <View style={styles.container}>
+        <Header title="LifeQuest"  style={{flex: 1 , width: '95%'}}/>
         <View style={{ flex: 1 , width: '95%'}}>
           <MainQuest />
         </View>

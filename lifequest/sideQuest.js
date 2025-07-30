@@ -11,6 +11,7 @@ export default function SideQuest() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [task, setTask] = useState('');
+  const [coins, setCoins] = useState(0);
 
   // const [data, setData] = useState([
   //   { id: '1', title: 'First work', status: '0' },
@@ -21,14 +22,33 @@ export default function SideQuest() {
   useEffect(() => {
     const loadData = async () => {
       try {
+        const today = new Date().toISOString().split('T')[0];
+
+        const savedDate = await AsyncStorage.getItem('@todo_date');
         const jsonValue = await AsyncStorage.getItem('@side_data');
-        if (jsonValue != null) {
+
+        if (savedDate !== today) {
+          // New day — reset the list
+          console.log('New day detected — clearing list');
+          setData([]);
+          await AsyncStorage.setItem('@todo_data', JSON.stringify([]));
+          await AsyncStorage.setItem('@todo_date', today);
+        } else if (jsonValue != null) {
           setData(JSON.parse(jsonValue));
         }
       } catch (e) {
         console.error('Error loading data', e);
       }
     };
+
+    const loadCoins = async () => {
+      const value = await AsyncStorage.getItem('@coin_count');
+      if (value !== null) {
+        setCoins(parseInt(value));
+      }
+    };
+
+    loadCoins();
     loadData();
   }, []);
 
@@ -36,13 +56,17 @@ export default function SideQuest() {
 
 
   const saveData = async (tasks) => {
-  try {
+    try {
       const jsonValue = JSON.stringify(tasks);
       await AsyncStorage.setItem('@side_data', jsonValue);
+
+      const today = new Date().toISOString().split('T')[0]; // e.g., "2025-07-29"
+      await AsyncStorage.setItem('@todo_date', today);
     } catch (e) {
       console.error('Error saving data', e);
     }
   };
+
 
   const toggleStatus = (id) => {
     const newData = data.map(item =>
