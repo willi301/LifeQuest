@@ -2,15 +2,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
 import Header from './header';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
+
+    const navigation = useNavigation();
 
     const handleBattle = () => {
     Alert.alert('⚔️ Battle!', 'You encountered a wild pet! (Feature coming soon)');
   };
 
   const handleShop = () => {
-    Alert.alert('🛍️ Shop', 'Searching for new pets... (Feature coming soon)');
+    navigation.navigate('Shop');
   };
 
 
@@ -35,6 +39,22 @@ export default function Profile() {
           <TouchableOpacity style={styles.button} onPress={handleShop}>
             <Text style={styles.buttonText}>🛍️ Shop</Text>
           </TouchableOpacity>
+    </View>
+
+    <View style={styles.reset}>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            await AsyncStorage.clear();
+            alert('reset!');
+          } catch (e) {
+            console.error('Error resetting pets', e);
+          }
+        }}
+        style={{ backgroundColor: 'red', padding: 10, borderRadius: 8 }}
+      >
+        <Text style={{ fontWeight: 'bold', color: 'white' }}>Reset Characters</Text>
+      </TouchableOpacity>
     </View>
       
 
@@ -90,4 +110,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  reset: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    alignItems: 'center',
+  }
 });

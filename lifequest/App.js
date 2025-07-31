@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import QuestBoard from './questBoard';
-import Profile from './profile';
+import ProfileStack from './profilestack'; // 👈 new stack
 
 const Tab = createBottomTabNavigator();
 
@@ -16,12 +16,9 @@ export default function App() {
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            if (route.name === 'QuestBoard') {
-              iconName = focused ? 'clipboard' : 'clipboard-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
-            }
+            let iconName = route.name === 'QuestBoard'
+              ? (focused ? 'clipboard' : 'clipboard-outline')
+              : (focused ? 'person' : 'person-outline');
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: 'tomato',
@@ -29,7 +26,7 @@ export default function App() {
         })}
       >
         <Tab.Screen name="QuestBoard" component={QuestBoard} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Profile" component={ProfileStack} />
       </Tab.Navigator>
     </NavigationContainer>
   );
