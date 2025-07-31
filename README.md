@@ -29,14 +29,7 @@ It’s your to-do list... with a game face on.
 ### 🧍 Profile Screen
 - [x] Character avatar displayed in center
 - [x] Two main actions: **Battle** and **Shop**
-- [x] Battle is a placeholder for future pet fights
-
-### 🐾 Pet Shop
-- [x] Scrollable shop page for discovering pets
-- [x] Each pet shows image, name, and price
-- [x] Buy pets with coins
-- [x] When purchased, the **Buy** button turns green and says “Owned”
-- [x] Ownership is saved with AsyncStorage
+- [x] Battle is a placeholder for future pet fights'
 
 ### 🧭 Navigation
 - [x] Bottom tab navigator for switching between:
@@ -49,6 +42,12 @@ It’s your to-do list... with a game face on.
 - [x] Reset pets (clears owned pets)
 - [x] Reset all data (clear AsyncStorage)
 - [x] Coin and ownership changes update header automatically
+
+### 🔧 Pet Shop (Work In Progress)
+- [x] Buy pets with coins
+- [x] Mark pets as owned
+- [ ] 🔧 Pet battles
+- [ ] 🔧 Pet inventory
 
 ---
 
