@@ -72,15 +72,52 @@ export default function MainQuest() {
     }
   };
 
-  const toggleStatus = (id) => {
-    const newData = data.map(item =>
-      item.id === id
-        ? { ...item, status: item.status === '0' ? '1' : '0' }
-        : item
-    );
-    setData(newData);
-    saveData(newData);
-  };
+const toggleStatus = async (id) => {
+  const newData = data.map(item => {
+    if (item.id === id) {
+      const wasCompleted = item.status === '1';
+      const newStatus = wasCompleted ? '0' : '1';
+
+      // Add or subtract coins based on toggle
+      if (newStatus === '1') {
+        incrementCoins();
+      } else {
+        console.log('Decrementing coins for uncompleted task');
+        decrementCoins();
+      }
+
+      return { ...item, status: newStatus };
+    }
+    return item;
+  });
+
+  setData(newData);
+  saveData(newData);
+};
+
+
+const incrementCoins = async () => {
+  try {
+    const current = await AsyncStorage.getItem('@coin_count');
+    const updated = current ? parseInt(current) + 1 : 1;
+    await AsyncStorage.setItem('@coin_count', updated.toString());
+    setCoins(updated); // update local state
+  } catch (e) {
+    console.error('Error updating coins', e);
+  }
+};
+
+const decrementCoins = async () => {
+  try {
+    const current = await AsyncStorage.getItem('@coin_count');
+    let updated = current ? parseInt(current) - 1 : 0;
+    updated = Math.max(0, updated); // Prevent going below 0
+    await AsyncStorage.setItem('@coin_count', updated.toString());
+    setCoins(updated); // update local state
+  } catch (e) {
+    console.error('Error decrementing coins', e);
+  }
+};
 
   const removeTask = (id) => {
     const filteredData = data.filter(item => item.id !== id);

@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     height: 60,
-    backgroundColor: '#333',
+    // backgroundColor: '#333',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: '#fff',
+    color: 'black',
     fontWeight: 'bold',
   },
   coinBox: {

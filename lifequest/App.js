@@ -1,33 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+// App.js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
-import MainQuest from './mainQuest';
-import SideQuest from './sideQuest';
-import Header from './Header';
+import QuestBoard from './questBoard';
+import Profile from './profile';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-
-      <View style={styles.container}>
-        <Header title="LifeQuest"  style={{flex: 1 , width: '95%'}}/>
-        <View style={{ flex: 1 , width: '95%'}}>
-          <MainQuest />
-        </View>
-        <View style={{ flex: 1 , width: '95%'}}>
-          <SideQuest />
-        </View>
-      </View>
-
-
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name === 'QuestBoard') {
+              iconName = focused ? 'clipboard' : 'clipboard-outline';
+            } else if (route.name === 'Profile') {
+              iconName = focused ? 'person' : 'person-outline';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: 'tomato',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      >
+        <Tab.Screen name="QuestBoard" component={QuestBoard} />
+        <Tab.Screen name="Profile" component={Profile} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-});
